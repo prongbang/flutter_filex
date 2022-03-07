@@ -1,6 +1,6 @@
 name: flutter_filex
 description: A simple Read & Write file.
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/prongbang/flutter_filex
 
 environment:
@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  path_provider: ^2.0.5
+  path_provider: ^2.0.9
 
 dev_dependencies:
   flutter_test:

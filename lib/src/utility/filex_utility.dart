@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_filex/flutter_filex.dart';
+import 'package:flutter_filex/src/utility/directory_creator.dart';
 
 abstract class FileXUtility {
   Future<String> write(FileX fileX);
@@ -18,22 +19,31 @@ abstract class FileXUtility {
 class FileXLocalUtility implements FileXUtility {
   final DirectoryUtility _directoryUtility;
   final Base64Utility _base64utility;
+  final DirectoryCreator _directoryCreator;
 
-  FileXLocalUtility(this._directoryUtility, this._base64utility);
+  FileXLocalUtility(
+    this._directoryUtility,
+    this._base64utility,
+    this._directoryCreator,
+  );
 
   @override
   Future<String> write(FileX fileX) async {
     File file = await _getFile(fileX);
-    if (!fileX.hasBytes || !fileX.hasBase64) {
-      return '';
-    }
 
+    // Check base64
     var bytes = fileX.bytes;
     if (fileX.hasBase64) {
       bytes = _base64utility.decode(fileX.base64!);
     }
 
-    await file.writeAsBytes(bytes!);
+    // Check byte is null
+    if (bytes == null) {
+      throw const FileSystemException('Byte of array is null.');
+    }
+
+    // Write to file
+    await file.writeAsBytes(bytes);
 
     return file.path;
   }
@@ -48,12 +58,23 @@ class FileXLocalUtility implements FileXUtility {
   }
 
   Future<File> _getFile(FileX fileX) async {
+    // Get root directory
     final dir = await _directoryUtility.directory();
     if (dir == null) {
-      throw FileSystemException('Directory not found.');
+      throw const FileSystemException('Directory not found.');
     }
-    return File(
-        '${dir.path}/${fileX.prefix}${fileX.filename}${fileX.extension}');
+
+    // Create directory
+    var rootPath = dir.path;
+    if (fileX.directory.isNotEmpty) {
+      final directory =
+          await _directoryCreator.create('$rootPath/${fileX.directory}');
+      rootPath = directory.path;
+    }
+
+    // Create File instance
+    final filename = '${fileX.prefix}${fileX.filename}${fileX.extension}';
+    return File('$rootPath/$filename}');
   }
 
   @override

@@ -3,6 +3,7 @@ import 'dart:typed_data';
 class FileX {
   String prefix;
   String filename;
+  String directory;
   String extension;
   Uint8List? bytes;
   String? base64;
@@ -22,6 +23,7 @@ class FileX {
   FileX({
     this.prefix = '',
     this.filename = '',
+    this.directory = '',
     this.extension = '',
     this.bytes,
     this.base64,

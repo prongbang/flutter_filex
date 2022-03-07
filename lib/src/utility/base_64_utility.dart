@@ -10,7 +10,8 @@ class LocalBase64Utility implements Base64Utility {
 
   LocalBase64Utility(this._decoder);
 
-  factory LocalBase64Utility.instance() => LocalBase64Utility(Base64Decoder());
+  factory LocalBase64Utility.instance() =>
+      LocalBase64Utility(const Base64Decoder());
 
   @override
   Uint8List decode(String input) {
