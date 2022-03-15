@@ -74,7 +74,7 @@ class FileXLocalUtility implements FileXUtility {
 
     // Create File instance
     final filename = '${fileX.prefix}${fileX.filename}${fileX.extension}';
-    return File('$rootPath/$filename}');
+    return File('$rootPath/$filename');
   }
 
   @override
